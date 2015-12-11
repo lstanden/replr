@@ -26,14 +26,14 @@
     "chalk": "^1.0.0",
     "doc": "0.0.3",
     "keypress": "^0.2.1",
-    "memorystream": "0.2.0",
+    "memorystream": "^0.3.0",
     "portscanner": "^1.0.0",
     "terminal": "0.1.4",
     "xtend": "^4.0.0",
     "yargs": "^3.5.4"
   },
   "devDependencies": {
-    "coffee-script": "1.6.3",
+    "coffee-script": "^1.10.0",
     "duplexer": "^0.1.1",
     "find-port": "^1.0.1",
     "ibrik": "^2.0.0",

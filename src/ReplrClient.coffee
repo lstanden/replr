@@ -28,11 +28,8 @@ class ReplrClient
     @width = @options.width || 80
     @height = @options.height || 40
 
-    replOptions.input = new InputInterceptor({
-      client: @,
-      socket: socket
-    })
-    replOptions.output = socket
+    replOptions.input = @socket
+    replOptions.output = @socket
 
     @repl = repl.start replOptions
 
@@ -88,12 +85,8 @@ class ReplrClient
 
     workers = ()=>
       doc: "Prints all workers running on this cluster"
-      prompt = @repl.prompt
-      @repl.prompt = ''
       @getWorkersDescription (description)=>
         @send description
-        @write prompt
-        @repl.prompt = prompt
       return
 
     select = (workerId)=>
@@ -204,7 +197,7 @@ class ReplrClient
       nonEssentialLineBreak = if active > 0 then "\n" else ''
 
       callback """
-               #{chalk.cyan("(#{active}) worker active#{plural}#{nonEssentialLineBreak}")}
+               #{chalk.cyan("(#{active}) worker#{plural} active#{nonEssentialLineBreak}")}
                #{description}
                """
 
@@ -227,7 +220,7 @@ class ReplrClient
 
                   #{hint}
 
-                  #{@repl.prompt}
+                  #{@repl._prompt || @repl.prompt}
                   """
     else 
       callback  """
@@ -235,7 +228,7 @@ class ReplrClient
 
                 #{hint}
 
-                #{@repl.prompt}
+                #{@repl._prompt || @repl.prompt}
                 """
 
 
@@ -311,7 +304,7 @@ class InputInterceptor extends Transform
           callback()
         else
           # List completions
-          @client.write "\n#{text}#{@client.repl.prompt}#{@inputBuffer}"
+          @client.write "\n#{text}#{@client.repl._prompt || @client.repl.prompt}#{@inputBuffer}"
           callback()
 
     else if input == '\n' || input == '\r'
